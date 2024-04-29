@@ -1,8 +1,8 @@
 # ProcessingRayTracer
 
-Processing projects implementing ray tracing, implicit surface generation, and mesh manipulation.
+This repo holds ray tracing, implicit surface generation, and mesh manipulation implementations, writting in the Processing (Java) language, implemented for Computer Graphics (CS-6491), Spring 2024, GA Tech.
 
-This repo holds all my project implementations for Computer Graphics (CS-6491), Spring 2024, GA Tech.
+Much of the documentation below was adapted from the assignment descriptions written by the course instructor, Dr. Greg Turk.
 
 ## Run
 
@@ -14,12 +14,12 @@ This repo holds all my project implementations for Computer Graphics (CS-6491), 
 
 ### Ray Tracing: Results
 
-The scenes for this project are given in pairs.
+Ray tracing scenes are shown in pairs.
 Pressing keys `1` to `9` causes the left (a) version of the scene to be rendered.
 Pressing `shift` `1` to `9` (characters `!@#$%^&*(`) causes the right (b) scene to be rendered.
 Many (but not all) of the (b) scenes shoot more than one ray per pixel.
 
-Below are the the generated images:
+Below are the generated images:
 
 | (a) | (b) |
 |-----------|-----------|
@@ -41,9 +41,7 @@ Pressing `0` renders the custom scene from the `implicit_surfaces` project, rend
 
 Each scene is described by a text file with `.cli` suffix (Command Language Interpreter), with each nonempty line describing a scene _command_.
 
-Each project revoled around implementating new scene description commands.
-Below are the commands, with explanations adapted from the assignments for clarity.
-
+The following scene description commands are implemented:
 * `background  r g b`:
 Sets the background color.
 If a ray misses all the objects in the scene, the corresponding pixel is set to this color.
