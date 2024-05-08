@@ -1,6 +1,7 @@
-# ProcessingRayTracer
+# Processing Ray Tracer
 
-This repo holds ray tracing, implicit surface generation, and mesh manipulation implementations, writting in the Processing (Java) language, implemented for Computer Graphics (CS-6491), Spring 2024, GA Tech.
+Ray tracing, implicit surface generation, and mesh manipulation.
+Written in the Processing (Java) language, implemented for Computer Graphics (CS-6491), Spring 2024, GA Tech.
 
 Much of the documentation below was adapted from the assignment descriptions written by the course instructor, Dr. Greg Turk.
 
@@ -16,7 +17,7 @@ Much of the documentation below was adapted from the assignment descriptions wri
 
 Ray tracing scenes are shown in pairs.
 Pressing keys `1` to `9` causes the left (a) version of the scene to be rendered.
-Pressing `shift` `1` to `9` (characters `!@#$%^&*(`) causes the right (b) scene to be rendered.
+Pressing `shift` + `1`-`9` (characters `!@#$%^&*(`) causes the right (b) scene to be rendered.
 Many (but not all) of the (b) scenes shoot more than one ray per pixel.
 
 Below are the generated images:
@@ -33,13 +34,13 @@ Below are the generated images:
 | ![s08a.jpg](renders/ray_tracer/s08a.jpg) | ![s08b.jpg](renders/ray_tracer/s08b.jpg) |
 | ![s09a.jpg](renders/ray_tracer/s09a.jpg) | ![s09b.jpg](renders/ray_tracer/s09b.jpg) |
 
-Pressing `0` renders the custom scene from the `implicit_surfaces` project, rendered as a low-poly, single-colored instance with soft-shadows, DOF, and glossy reflections:
+Pressing `0` renders the custom scene from the `implicit_surfaces` project, rendered as a low-poly, single-colored instance with soft shadows, DOF, and glossy reflections:
 
 ![](renders/ray_tracer/implicit_surface_scene.png)
 
 ### Ray Tracing: Scene description language
 
-Each scene is described by a text file with `.cli` suffix (Command Language Interpreter), with each nonempty line describing a scene _command_.
+Each scene is described by a text file with a `.cli` suffix (Command Language Interpreter), with each nonempty line describing a scene _command_.
 
 The following scene description commands are implemented:
 * `background  r g b`:
@@ -60,7 +61,7 @@ Three such vertex commands in a row define a triangle.
 * `end`:
 Indicates the end of a triangle.
 * `render`:
-Ray-traces the scene and displays the image in the drawing window.
+Ray traces the scene and displays the image in the drawing window.
 * `translate  tx ty tz`:
 Create a translation matrix $T$ and multiply it on the right-hand side of the matrix stack, $C_{\text{new}} = C * T$.
 * `scale  sx sy sz`:
@@ -69,22 +70,22 @@ Create a scale matrix $S$ and multiply it on the right-hand side of the matrix s
 Create a rotation matrix $R$ and multiply it on the right-hand side of the matrix stack, $C_{\text{new}} = C * R$.
 Angles of rotation are specified in degrees.
 * `push`:
-Duplicate the matrix on top of the stack, and push this duplicate onto the stack.
+Duplicate the matrix on top of the stack and push this duplicate onto the stack.
 This new top of the stack is the current transformation matrix $C$.
 When the program starts with a single identity matrix $I$ on top of the stack.
 * `pop`:
 Pop off the top matrix from the stack and discard it.
-If the stack only has one element when, an error is printed.
+If the stack only has one element, an error is printed.
 * `vertex  x y z`:
-All triangles in the scene are affected by the current transformation matrix $C$ (the top matrix on the stack).
+The current transformation matrix $C$ (the top matrix on the stack) affects all triangles in the scene.
 * `box  xmin ymin zmin  xmax ymax zmax`:
-Create an axis-aligned box primitive, and put it on the list of scene objects.
-Used for acceleration data structure.
+Create an axis-aligned box primitive and put it on the list of scene objects.
+Used for acceleration data structures.
 Just like triangles, boxes are modified by the current transformation matrix when the box is created.
 (Rotating an axis-aligned box will have unexpected results.)
 * `named_object  <name>`:
 Remove the most recently created object from the list of scene objects, convert this object to a named object, and place it in the named objects collection.
-A named object can be a triangle, an axis aligned box, or an acceleration data structure that contains multiple objects.
+A named object can be a triangle, an axis-aligned box, or an acceleration data structure containing multiple objects.
 * `instance <name>`:
 Create an instance of a named object and add that object to the scene objects list.
 * `begin_accel`:
@@ -107,7 +108,7 @@ Rays shot at such an object are assigned a random time in [0, 1].
 The moving object is translated by this random time amount times the displacement.
 When many `rays_per_pixel >> 1`, this gives the appearance of motion blur.
 * `disk_light  x y z  radius  dx dy dz  r g b`:
-Create a disk light source, with a given center `(x, y, z)`, radius, light direction `(dx, dy, dz)`, and light color `(r, g, b)`.
+Create a disk light source with a given center `(x, y, z)`, radius, light direction `(dx, dy, dz)`, and light color `(r, g, b)`.
 Shadow rays are shot to random locations on this disk.
 When many `rays_per_pixel >> 1`, this creates soft shadows.
 * `lens  radius  dist`:
@@ -118,7 +119,7 @@ All rays for a given pixel, no matter where they originate on the lens, pass thr
 * `glossy  dr dg db  sr sg sb  spec_pow  k_refl  gloss_radius`:
 Create a shiny surface material.
 `(dr dg db)` are the diffuse color coefficients, just as in the `surface` command.
-`(sr sg sb)` are the specular color coefficients, and only affect the colors of the specular highlights.
+`(sr sg sb)` are the specular color coefficients and only affect the colors of the specular highlights.
 `spec_pow` affects the apparent roughness of the surface, with higher values giving tighter highlights.
 `k_refl > 0` indicates the surface is shiny enough to shoot reflected rays and indicates how much they contribute to the surface color.
 When `gloss_radius == 0`, the direction of the reflected rays travels in the perfect mirror direction.
@@ -127,7 +128,7 @@ When multiple rays per pixel are used, this gives the impression of glossy refle
 
 ## Implicit Surfaces
 
-The following are the scene keys, descriptions and renders for this project:
+The following are the scene keys, descriptions, and renders for this project:
 
 * **1:** A single implicit sphere.
 * **!:** A flattened sphere that looks like a flying saucer.
@@ -154,11 +155,11 @@ The following are the scene keys, descriptions and renders for this project:
 |-----------|-----------|
 | ![s05a.jpg](renders/implicit_surfaces/s05a.jpg) | ![s05b.jpg](renders/implicit_surfaces/s05b.jpg) |
 
-|**6:** Implement the taper deformation, and use it to create a tapered line segment.|**^:** Use both taper and twist together to deform a line segment.|
+|**6:** Implement the taper deformation and use it to create a tapered line segment.|**^:** Use both taper and twist together to deform a line segment.|
 |-|-|
 | ![s06a.jpg](renders/implicit_surfaces/s06a.jpg) | ![s06b.jpg](renders/implicit_surfaces/s06b.jpg) |
 
-|**7:** Perform boolean intersection between two spheres to make a saucer shape that has sharp edges.|**&:** Perform a boolean subtraction that punches a hole through a sphere.|
+|**7:** Perform a boolean intersection between two spheres to make a saucer shape that has sharp edges.|**&:** Perform a boolean subtraction that punches a hole through a sphere.|
 |-----------|-----------|
 | ![s07a.jpg](renders/implicit_surfaces/s07a.jpg) | ![s07b.jpg](renders/implicit_surfaces/s07b.jpg) |
 
@@ -180,13 +181,13 @@ Allow interactive morphing between a sphere and three intersecting line segments
 * f: Toggle between per-face and per-vertex normals.
 * w: Toggle between white and randomly colored faces.
 * e: Toggle between not showing and showing the mesh edges in black.
-* v: Toggle visualization of a directed edge on / off
+* v: Toggle visualization of a directed edge on/off
 * n: Change the current edge using the "next" operator.
 * p: Change the current edge using the "previous" operator.
 * o: Change the current edge using the "opposite" operator.
 * s: Change the current edge using the "swing" operator.
 * d: Create and display the dual of the mesh (unlimited number of times).
-* g: Perform geodesic (midpoint) subdivision of the mesh and project vertices to sphere (unlimited number of times).
+* g: Perform geodesic (midpoint) subdivision of the mesh and project vertices to the unit sphere (unlimited number of times).
 * c: Perform Catmull-Clark subdivision (unlimited number of times).
 * r: Add random noise to the mesh by moving the vertices in the normal direction (both in and out).
 * l (lower case "L"): Perform Laplacian smoothing (40 iterations).
@@ -200,7 +201,7 @@ Allow interactive morphing between a sphere and three intersecting line segments
 |---------------|------|----------|----------|-------|
 | ![](renders/mesh_manipulation/01_show_directed_edge.png) | ![](renders/mesh_manipulation/02_next.png) | ![](renders/mesh_manipulation/03_prev.png) | ![](renders/mesh_manipulation/04_opposite.png) | ![](renders/mesh_manipulation/05_swing.png) |
 
-**Shading:** These next images show each model using flat shading, flat shading with edges shown, colored faces, and with per-vertex normals.
+**Shading:** These next images show each model using flat shading, flat shading with edges shown, colored faces, and vertex normals.
 
 | Octahedron | Octahedron (Edges) | Octahedron (Colored) | Octahedron (Normals) |
 |------------|---------------------|-----------------------|-----------------------|
@@ -246,7 +247,7 @@ Allow interactive morphing between a sphere and three intersecting line segments
 |-------------|-----------------------|-----------------------|-----------------------|
 | ![](renders/mesh_manipulation/34_icos.png) | ![](renders/mesh_manipulation/35_icos_geo1.png) | ![](renders/mesh_manipulation/36_icos_geo2.png) | ![](renders/mesh_manipulation/37_icos_geo3.png) |
 
-**Catmull-Clark subdivision:** Each row of the next images shows an original model, followed by the model with 1, 2, and 4 steps of Catmull-Clark subdivision.
+**Catmull-Clark subdivision:** The next four images show an original model in each row, followed by the model with 1, 2, and 4 steps of Catmull-Clark subdivision.
 
 | Octahedron | Octahedron (1 Step) | Octahedron (2 Steps) | Octahedron (4 Steps) |
 |------------|----------------------|----------------------|----------------------|
@@ -292,8 +293,8 @@ Catmull-Clark subdivision on star:
 | ![](renders/mesh_manipulation/51a_star.png) | ![](renders/mesh_manipulation/51b_star.png) | ![](renders/mesh_manipulation/51c_star.png) | ![](renders/mesh_manipulation/51d_star.png) |
 
 
-**Smooth shaded models:** These next three images show smooth shaded versions of models that were subdivided three times using Catmull-Clark.
-The models are the icosahedron, star, and 'S'.
+**Smooth-shaded models:** These next three images show smooth-shaded versions of models that were subdivided three times using Catmull-Clark.
+The models are the icosahedron, star, and the 'S'.
 
 | Icosahedron | Star | S |
 |-------------|------|---|
